@@ -3,6 +3,19 @@ var Client = require('instagram-private-api').V1;
 var device = new Client.Device('dokagorikodoi');
 var storage = new Client.CookieFileStorage(__dirname + '/cookies/dokagorikodoi.json');
 
+const Proxy = require('./Proxy');
+
+var proxy = new Proxy(24000);
+
+proxy.refreshIp()
+    .then(function() {
+        console.log('Ip refreshed');
+    })
+    .catch(function(error) {
+        console.log('Got error refreshing:', error);
+    });
+
+/*
 Client.Session.create(device, storage, 'dokagorikodoi', 'bwq0klnj', 'http://127.0.0.1:24000/')
     .then(function(session) {
         return [session, Client.Account.searchForUser(session, 'drake')]
@@ -12,4 +25,4 @@ Client.Session.create(device, storage, 'dokagorikodoi', 'bwq0klnj', 'http://127.
     })
     .then(function(rel) {
         console.log(rel.params);
-    });
+    });*/
