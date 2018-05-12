@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/App.ts",
+    "debug": "node --inspect --require ts-node/register src/App.ts"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +17,11 @@
     "mysql2": "^1.5.3",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/config": "0.0.34",
+    "@types/knex": "^0.14.14",
+    "ts-node": "^6.0.3",
+    "typescript": "^2.8.3"
   }
 }

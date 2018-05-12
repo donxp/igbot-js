@@ -1,10 +1,17 @@
-const knex = require('knex');
+const knex = require('./Database');
 
 class Account {
     static All = [];
 
-    static loadAll() {
+    constructor(username, password) {
+        this.username = username;
+        this.password = password;
+    }
 
+    static loadAll() {
+        let account = new Account();
+
+        knex.select().table('accounts');
     }
 }
 

@@ -1,9 +1,10 @@
-const rp = require('request-promise-native');
-const config = require('config');
-const LuminatiApi = require('./LuminatiApi');
+import LuminatiApi from "./LuminatiApi";
 
-class Proxy {
-    constructor(port, ip = '127.0.0.1') {
+export default class Proxy {
+    port: number;
+    ip: string;
+
+    constructor(port: number, ip: string='127.0.0.1') {
         this.port = port;
         this.ip = ip;
     }
@@ -24,5 +25,3 @@ class Proxy {
         });
     }
 }
-
-module.exports = Proxy;

@@ -1,19 +1,11 @@
 // dokagorikodoi:bwq0klnj
 const config = require('config');
-const knex = require('knex')({
-    client: 'mysql2',
-    connection: {
-        host: config.get('mysql.host'),
-        user: config.get('mysql.username'),
-        password: config.get('mysql.password'),
-        database: config.get('mysql.database'),
-    }
-});
+const knex = require('./Database');
 var Client = require('instagram-private-api').V1;
 var device = new Client.Device('dokagorikodoi');
 var storage = new Client.CookieFileStorage(__dirname + '/cookies/dokagorikodoi.json');
 
-const Proxy = require('./Proxy');
+const Proxy = require('./Proxyy');
 // LOOk
 // =>>>>> https://github.com/Kannaj/node-knex-sample
 knex.select().table('accounts')
