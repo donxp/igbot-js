@@ -7,12 +7,16 @@ export default class Account {
 
     username: string;
     password: string;
+    email: string;
+    emailPassword: string;
     proxy: Proxy;
     cookieMemoryStorage: Client.CookieMemoryStorage;
 
-    constructor(username: string, password: string) {
+    constructor(username: string, password: string, email: string, emailPassword: string) {
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.emailPassword = emailPassword;
 
         this.cookieMemoryStorage = null;
     }
@@ -21,6 +25,12 @@ export default class Account {
         this.proxy = proxy;
     }
 
+    /**
+     * Get relationship between current account and target account.
+     *
+     * @param {string} user
+     * @return {Promise}
+     */
     public getRelationship(user: string) {
         return new Promise((resolve, reject) => {
             this.createUserSession()
@@ -35,6 +45,11 @@ export default class Account {
         })
     }
 
+    /**
+     * Create a proxied user session.
+     *
+     * @return {any}
+     */
     private createUserSession() {
         return Client.Session.create(this.createDevice(), this.cookieMemoryStorage, this.username, this.password, `http://${this.proxy.ip}:${this.proxy.port}/`)
     }
@@ -72,7 +87,7 @@ export default class Account {
             knex.select().table('accounts')
                 .then(function(collection) {
                     collection.forEach(function(account) {
-                        Account.All.push(new Account(account.username, account.password));
+                        Account.All.push(new Account(account.username, account.password, account.email, account.email_password));
                     });
                     resolve();
                 })
