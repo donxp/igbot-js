@@ -11,7 +11,6 @@ export default class MailRu {
     static getActToken(emailAddress: string) {
         return new Promise(function(resolve, reject) {
             const options = {
-                //uri: 'https://account.mail.ru/login/?mode=simple&v=2.0.13&type=login&allow_external=1&success_redirect=https%3A%2F%2Fe.mail.ru%2Fmessages%2Finbox%3Fback%3D1&opener=mail.login&email=kabanovvyacheslavcyr404%40list.ru&modal=1&parent_url=https%3A%2F%2Fe.mail.ru%2Flogin%3Femail%3Dkabanovvyacheslavcyr404%40list.ru',
                 uri: `https://account.mail.ru/login/?mode=simple&v=2.0.13&type=login&allow_external=1&success_redirect=https%3A%2F%2Fe.mail.ru%2Fmessages%2Finbox%3Fback%3D1&opener=mail.login&email=${emailAddress}&modal=1&parent_url=https%3A%2F%2Fe.mail.ru%2Flogin%3Femail%3D${emailAddress}`,
                 method: 'GET',
                 simple: false,
@@ -22,9 +21,7 @@ export default class MailRu {
                     const token = response.headers['set-cookie'][0].split(' ')[0].replace('act=', '').replace(';', '');
                     resolve(token);
                 })
-                .catch(function(error) {
-                    reject(error);
-                })
+                .catch(reject)
         })
     }
 

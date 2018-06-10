@@ -3,10 +3,13 @@ import knex from "./Database"
 import Account from "./Account"
 import * as MailListener from "mail-listener4"
 import MailRu from "./MailRu"
+import {machineId} from "node-machine-id"
+import ClusterManager from "./ClusterManager";
 
 Account.loadAll().then(() => {
     console.log('Number of accs:', Account.All.length);
 
+    ClusterManager.UpdateHeartbeat();
    /* MailRu.getActToken('kabanovvyacheslavcyr404@list.ru')
         .then(function(token: string) {
             console.log('Got token', token);
@@ -19,7 +22,7 @@ Account.loadAll().then(() => {
                     console.log('Got error', error);
                 })
         })*/
-    let proxy = new Proxy(24000);
+    /*let proxy = new Proxy(24000);
 
     let account = Account.All[6];
 
@@ -37,5 +40,5 @@ Account.loadAll().then(() => {
 
     mailListener.start();
 
-    mailListener.on("server:connected", () => console.log("Connected to server"));
+    mailListener.on("server:connected", () => console.log("Connected to server"));*/
 });
