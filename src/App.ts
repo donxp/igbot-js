@@ -4,41 +4,46 @@ import Account from "./Account"
 import * as MailListener from "mail-listener4"
 import MailRu from "./MailRu"
 import {machineId} from "node-machine-id"
-import ClusterManager from "./ClusterManager";
+import ClusterManager from "./ClusterManager"
+import Worker from "./Worker"
+import * as cluster from "cluster"
+import * as waitUntil from "async-wait-until"
 
-Account.loadAll().then(() => {
-    console.log('Number of accs:', Account.All.length);
+const workerCount : number = 2;
 
-    ClusterManager.UpdateHeartbeat();
-   /* MailRu.getActToken('kabanovvyacheslavcyr404@list.ru')
-        .then(function(token: string) {
-            console.log('Got token', token);
-            MailRu.login('kabanovvyacheslavcyr404@list.ru', 'x0xN25pZL', token)
-                .then(function(response) {
-                    console.log('Got response');
-                    console.log(response);
-                })
-                .catch(function(error) {
-                    console.log('Got error', error);
-                })
-        })*/
-    /*let proxy = new Proxy(24000);
+if(cluster.isMaster) {
+    console.log(`Master worker (${process.pid}) started.`);
 
-    let account = Account.All[6];
+    for(let i = 0; i < workerCount; i++) {
+        new Worker(cluster.fork(), cluster.workers);
+    }
 
-    let mailListener = new MailListener({
-        username: account.email,
-        password: account.emailPassword,
-        host: "imap.mail.ru",
-        port: 993,
-        tls: true,
-        mailbox: "INBOX",
-        searchFilter: ["ALL"],
-        markSeen: true,
-        fetchUnreadOnStart: true
+    console.log('All workers have been spawned. Waiting until start.');
+
+    waitUntil(() => {
+        const startedWorkers = Worker.All.filter(worker => worker.hasStarted());
+        return workerCount == startedWorkers.length;
+    }, 5000, 100).then(function() {
+        console.log('All workers have started.');
+    }).catch(function(err) {
+        console.log('Timed out waitUntil:', err);
     });
 
-    mailListener.start();
+    /* wait until all workers started */
 
-    mailListener.on("server:connected", () => console.log("Connected to server"));*/
-});
+    /*for(let i = 0; i < ClusterManager.Workers.length; i++) {
+        cluster.workers[ClusterManager.Workers[i].id].on('message', function(ev) {
+            if(ev.msg == 'started') {
+                console.log(`Worker (${ClusterManager.Workers[i].process.pid}) confirmed to have started.`);
+            }
+        })
+    }*/
+
+    Account.loadAll().then(() => {
+        console.log('Number of accs:', Account.All.length);
+    });
+} else {
+    console.log(`Worker (${process.pid}) started.`);
+    process.send({ msg: 'started' })
+}
+
