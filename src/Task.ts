@@ -1,7 +1,8 @@
 import {TaskType} from "./TaskType"
-import {TaskStatus} from "./TaskStatus";
-import {Promise} from "bluebird";
-import {machineId} from "node-machine-id";
+import {TaskStatus} from "./TaskStatus"
+import {Promise} from "bluebird"
+import {machineId} from "node-machine-id"
+import knex from "./Database"
 
 export default class Task {
     id: number;
@@ -9,7 +10,6 @@ export default class Task {
     type: TaskType;
     amount: number;
     status: TaskStatus;
-    assignedTo: string;
 
     constructor(id: number, target: string, amount: number, type: TaskType, status: TaskStatus) {
         this.id = id;
@@ -22,8 +22,10 @@ export default class Task {
     static getAssignedPendingTasks() {
         return new Promise(function(resolve, reject) {
             Promise.resolve(machineId()).then(function(hwid) {
+                return knex('tasks').where('assignedTo', hwid);
+            }).then(function(result: object[]) {
 
-            })
+            });
         });
     }
 }
